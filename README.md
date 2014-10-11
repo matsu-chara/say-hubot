@@ -2,13 +2,13 @@
 
 hubotにTwitterのTLを読み上げさせたりするやつです(mac用)
 
-* 発言を取得して[SayKotoeri2](https://sites.google.com/site/nicohemus/home/saykotoeri2)を使って喋ります
+* 発言を取得してsayコマンドを使って喋ります
 
 * 先頭がスペースの場合は喋りません。(`/^[^\s].*$/`)
 
 ## 準備
 
-* SayKotoeri2をインストール
+* システム環境設定＞音声入力と読み上げ＞テキスト読み上げから日本語用音声(Kyoko, Otoya)を設定
 
 * アダプターごとの環境変数を保存
 
