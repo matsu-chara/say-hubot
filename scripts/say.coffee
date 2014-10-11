@@ -5,4 +5,5 @@ sh = require 'execSync'
 
 module.exports = (robot) ->
   robot.hear /^[^\s].*$/i, (msg) ->
-    sh.run "SayKotoeri2 \"#{msg.envelope.message.text}\""
+    text = msg.envelope.message.text.replace(/[\\*+.?(){}\[\]^$\-|/]/g,'')
+    sh.run "SayKotoeri2 \"#{text}\"" if text isnt ''
