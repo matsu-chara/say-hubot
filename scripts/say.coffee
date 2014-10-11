@@ -10,4 +10,5 @@ module.exports = (robot) ->
           .replace(/[\\*+.?(){}\[\]^$\-|/]/g,'')
           .replace(/[«]/g,'')
 
+    console.log msg.envelope.message.text
     sh.run "SayKotoeri2 \"#{text}\"" if text isnt ''
