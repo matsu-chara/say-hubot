@@ -1,22 +1,15 @@
 # say-hubot
 
-* twitterからTLを取得して[SayKotoeri2](https://sites.google.com/site/nicohemus/home/saykotoeri2)を使って喋ります
+hubotにTwitterのTLを読み上げさせたりするやつです(mac用)
+
+* 発言を取得して[SayKotoeri2](https://sites.google.com/site/nicohemus/home/saykotoeri2)を使って喋ります
+
+* 先頭がスペースの場合は喋りません。(`/^[^\s].*$/`)
 
 ## 準備
 
 * SayKotoeri2をインストール
 
-* 以下の環境変数を保存
+* アダプターごとの環境変数を保存
 
-
-```sh
-# hubot-twitter-userstream
-export HUBOT_NAME="hubot"
-export HUBOT_ROOM_NAME="Twitter"
-export HUBOT_TWITTER_KEY=""
-export HUBOT_TWITTER_SECRET=""
-export HUBOT_TWITTER_TOKEN=""
-export HUBOT_TWITTER_TOKEN_SECRET=""
-```
-
-* `bin/hubot -a twitter-userstream`で受付開始
+* `bin/hubot -a {adopter_name}`で受付開始
