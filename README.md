@@ -10,6 +10,8 @@ hubotにTwitterのTLを読み上げさせたりするやつです(mac用)
 
 * システム環境設定＞音声入力と読み上げ＞テキスト読み上げから日本語用音声(Kyoko, Otoya)を設定
 
+* 環境変数で`export SAY_HUBOT_ENGLISH_VOICE="Alex"`, `export SAY_HUBOT_JAPANESE_VOICE="Otoya"`のように英語・日本語音声を指定
+
 * アダプターごとの環境変数を保存
 
 * `bin/hubot -a {adopter_name}`で受付開始
