@@ -27,6 +27,7 @@ class SayMessage
     else
       text = @text
               .replace(/http[s]*:\/\/.*\s/g, '')
+              .replace(/http[s]*:\/\/.*$/g, '')
               .replace(/^RT\s|\sRT\s/, "#{@context.getRetweet()}, ")
     return "@#{@user}, #{text}"
 
