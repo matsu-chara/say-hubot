@@ -2,7 +2,7 @@
 #
 
 sh = require 'execSync'
-shellwords = require 'shellwords'
+shellescape = require 'shell-escape'
 
 class SayMessage
   constructor: (@user, @text) ->
@@ -10,13 +10,13 @@ class SayMessage
       if @isAsciiMessage() then new EnglishContext else new JapaneseContext
 
   isAsciiMessage: () =>
-    code = sh.run "echo \'#{shellwords.escape  @text}\'" +
+    code = sh.run "echo #{shellescape [@text]}" +
                   " | nkf -g | xargs -I {} test {} = ASCII"
     return if code == 0 then true else false
 
   say: () =>
-    sh.run "say -v \'#{shellwords.escape @context.getVoice()}\'" +
-           " \'#{shellwords.escape @getSayText()}\'"
+    sh.run "say -v #{shellescape [@context.getVoice()]}" +
+           " #{shellescape [@getSayText()]}"
 
   outputLog: () =>
     console.log @getSayText(true)
