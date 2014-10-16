@@ -2,27 +2,56 @@
 #
 
 sh = require 'execSync'
+shellwords = require 'shellwords'
 
-isAscii = (text) ->
-  code =
-    sh.run "echo \"#{text}\" | nkf -g | xargs -I {} test {} = ASCII"
+class SayMessage
+  constructor: (@user, @text) ->
+    @context =
+      if @isAsciiMessage() then new EnglishContext else new JapaneseContext
 
-  return if code == 0 then true else false
+  isAsciiMessage: () =>
+    code = sh.run "echo #{shellwords.escape  @text} | nkf -g | xargs -I {} test {} = ASCII"
+    return if code == 0 then true else false
 
-getVoice = (text) ->
-  enVoice = process.env.SAY_HUBOT_ENGLISH_VOICE ? "Alex"
-  jpVoice = process.env.SAY_HUBOT_JAPANESE_VOICE ? "Otoya"
+  say: () =>
+    sh.run "say -v #{shellwords.escape @context.getVoice()} #{shellwords.escape @getSayText()}"
 
-  return if isAscii(text) then enVoice else jpVoice
+  outputLog: () =>
+    console.log @getSayText(true)
+
+  getSayText: (isRaw) =>
+    if isRaw
+      text = @text
+    else
+      text = @text
+              .replace(/http[s]*:\/\/.*\s/g, '')
+              .replace(/^RT\s|\sRT\s/, "#{@context.getRetweet()}, ")
+    return "@#{@user}, #{text}"
+
+class Context
+  getVoice: () ->
+
+  getRetweet: () ->
+
+class JapaneseContext extends Context
+  getVoice: () ->
+    return process.env.SAY_HUBOT_JAPANESE_VOICE ? "Otoya"
+
+  getRetweet: () ->
+    return "リツイート"
+
+class EnglishContext extends Context
+  getVoice: () ->
+    return process.env.SAY_HUBOT_ENGLISH_VOICE ? "Alex"
+
+  getRetweet: () ->
+    return "retweet"
 
 module.exports = (robot) ->
   robot.hear /^[^\s].*$/i, (msg) ->
-    text = msg.envelope.message.text
     user = msg.envelope.message.user.name
-    console.log "@#{user}, #{text}"
+    text = msg.envelope.message.text
 
-    sayText = text
-                .replace(/http[s]*:\/\/.*/g, '')
-                .replace(/['`]/g, '')
-    voice = getVoice(sayText)
-    sh.run "say -v #{voice} \"@#{user}, #{sayText}\"" if sayText isnt ''
+    sm = new SayMessage user, text
+    sm.outputLog()
+    sm.say()
