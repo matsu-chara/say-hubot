@@ -10,11 +10,13 @@ class SayMessage
       if @isAsciiMessage() then new EnglishContext else new JapaneseContext
 
   isAsciiMessage: () =>
-    code = sh.run "echo #{shellwords.escape  @text} | nkf -g | xargs -I {} test {} = ASCII"
+    code = sh.run "echo \'#{shellwords.escape  @text}\'" +
+                  " | nkf -g | xargs -I {} test {} = ASCII"
     return if code == 0 then true else false
 
   say: () =>
-    sh.run "say -v #{shellwords.escape @context.getVoice()} #{shellwords.escape @getSayText()}"
+    sh.run "say -v \'#{shellwords.escape @context.getVoice()}\'" +
+           " \'#{shellwords.escape @getSayText()}\'"
 
   outputLog: () =>
     console.log @getSayText(true)
