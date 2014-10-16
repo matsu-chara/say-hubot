@@ -29,12 +29,15 @@ class SayMessage
               .replace(/http[s]*:\/\/.*\s/g, '')
               .replace(/http[s]*:\/\/.*$/g, '')
               .replace(/^RT\s|\sRT\s/, "#{@context.getRetweet()}, ")
+              .replace(/#/, "#{@context.getSharp()}, ")
     return "@#{@user}, #{text}"
 
 class Context
   getVoice: () ->
 
   getRetweet: () ->
+
+  getSharp: () ->
 
 class JapaneseContext extends Context
   getVoice: () ->
@@ -43,12 +46,18 @@ class JapaneseContext extends Context
   getRetweet: () ->
     return "リツイート"
 
+  getSharp: () ->
+    return "シャープ"
+
 class EnglishContext extends Context
   getVoice: () ->
     return process.env.SAY_HUBOT_ENGLISH_VOICE ? "Alex"
 
   getRetweet: () ->
     return "retweet"
+
+  getSharp: () ->
+    return "sharp"
 
 module.exports = (robot) ->
   robot.hear /^[^\s].*$/i, (msg) ->
