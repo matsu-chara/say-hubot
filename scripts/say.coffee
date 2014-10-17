@@ -25,7 +25,7 @@ class SayMessage
     text = if isRaw then @text else @context.replace(@text)
     return "@#{@user}, #{text}"
 
-class Context
+class LanguageContext
   replace: (text)->
     return @cutUrl text
 
@@ -35,8 +35,9 @@ class Context
             .replace(/http[s]*:\/\/.*$/g, '')
 
   getVoice: () ->
+    return "Alex"
 
-class JapaneseContext extends Context
+class JapaneseContext extends LanguageContext
   replace: (text) ->
     return super(text)
             .replace(/^RT\s|\sRT\s/, "リツイート, ")
@@ -45,7 +46,7 @@ class JapaneseContext extends Context
   getVoice: () ->
     return process.env.SAY_HUBOT_JAPANESE_VOICE ? "Otoya"
 
-class EnglishContext extends Context
+class EnglishContext extends LanguageContext
   replace: (text) ->
     return super(text)
             .replace(/^RT\s|\sRT\s/, "retweet, ")
