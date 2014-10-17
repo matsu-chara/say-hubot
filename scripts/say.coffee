@@ -22,42 +22,37 @@ class SayMessage
     console.log @getSayText(true)
 
   getSayText: (isRaw) =>
-    if isRaw
-      text = @text
-    else
-      text = @text
-              .replace(/http[s]*:\/\/.*\s/g, '')
-              .replace(/http[s]*:\/\/.*$/g, '')
-              .replace(/^RT\s|\sRT\s/, "#{@context.getRetweet()}, ")
-              .replace(/#/, "#{@context.getSharp()}, ")
+    text = if isRaw then @text else @context.replace(@text)
     return "@#{@user}, #{text}"
 
 class Context
+  replace: (text)->
+    return @cutUrl text
+
+  cutUrl: (text) ->
+    return text
+            .replace(/http[s]*:\/\/.*\s/g, '')
+            .replace(/http[s]*:\/\/.*$/g, '')
+
   getVoice: () ->
 
-  getRetweet: () ->
-
-  getSharp: () ->
-
 class JapaneseContext extends Context
+  replace: (text) ->
+    return super(text)
+            .replace(/^RT\s|\sRT\s/, "リツイート, ")
+            .replace(/#/, "シャープ, ")
+
   getVoice: () ->
     return process.env.SAY_HUBOT_JAPANESE_VOICE ? "Otoya"
 
-  getRetweet: () ->
-    return "リツイート"
-
-  getSharp: () ->
-    return "シャープ"
-
 class EnglishContext extends Context
+  replace: (text) ->
+    return super(text)
+            .replace(/^RT\s|\sRT\s/, "retweet, ")
+            .replace(/#/, "sharp, ")
+
   getVoice: () ->
     return process.env.SAY_HUBOT_ENGLISH_VOICE ? "Alex"
-
-  getRetweet: () ->
-    return "retweet"
-
-  getSharp: () ->
-    return "sharp"
 
 module.exports = (robot) ->
   robot.hear /^[^\s].*$/i, (msg) ->
